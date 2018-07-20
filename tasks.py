@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import timedelta
 import os
 
 from celery import Celery
-from celery.schedules import crontab
+
 
 app = Celery('python-tasks')
 app.conf.update(
@@ -11,12 +11,14 @@ app.conf.update(
 )
 
 
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(crontab(minute='*/1'), every_minute.s())
-
-
 @app.task
-def every_minute():
-    print('every_minute')
-    print(datetime.utcnow())
+def say_hello():
+    print('Hello, World!')
+
+
+CELERYBEAT_SCHEDULE = {
+    'every-second': {
+        'task': 'example.say_hello',
+        'schedule': timedelta(seconds=5),
+    },
+}
