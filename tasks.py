@@ -2,8 +2,9 @@ from datetime import timedelta
 import os
 
 from celery import Celery
+from celery.utils.log import get_task_logger
 
-
+logger = get_task_logger('python-tasks')
 app = Celery('python-tasks')
 app.conf.update(
     BROKER_URL=os.environ['REDIS_URL'],
@@ -13,7 +14,7 @@ app.conf.update(
 
 @app.task
 def say_hello():
-    print('Hello, World!')
+    logger.info('Hello, World!')
 
 
 CELERYBEAT_SCHEDULE = {
