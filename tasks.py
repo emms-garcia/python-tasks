@@ -2,7 +2,6 @@ from datetime import datetime
 import os
 
 from celery import Celery
-from celery.schedules import crontab
 
 app = Celery('python-tasks')
 app.conf.update(
@@ -13,7 +12,7 @@ app.conf.update(
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(crontab(minute='*/1'), every_minute.s())
+    sender.add_periodic_task(30.0, every_minute.s(), expires=10)
 
 
 @app.task
