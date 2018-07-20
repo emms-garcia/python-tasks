@@ -1,1 +1,1 @@
-worker: celery -A tasks.app worker -B -l info
+worker: celery -A tasks.app worker -E -B --loglevel=INFO
