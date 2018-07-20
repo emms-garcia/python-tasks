@@ -1,14 +1,12 @@
 from datetime import datetime
+import os
 
-from apscheduler.schedulers.blocking import BlockingScheduler
+from huey import RedisHuey, crontab
 
-sched = BlockingScheduler()
+huey = RedisHuey('python-tasks', host=os.environ.get('REDIS_URL'))
 
 
-@sched.scheduled_job('interval', minutes=1)
-def timed_job():
-    print('This job is run every minute.')
+@huey.periodic_task(crontab(minute='*/3'))
+def every_3_minutes():
+    print('every_3_minutes')
     print(datetime.utcnow())
-
-
-sched.start()
